@@ -1,47 +1,43 @@
-import './App.css'
+import { useEffect, useState } from 'react'
+import type { User } from './types/User'
+import { UserList } from './components/UserList'
+import { UserDetails } from './components/UserDetails'
+import axios from "axios"
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import type { Project, Tag, Task } from './types/types'
+export default function App() {
+  const [users, setUsers] = useState<User[]>([])
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-import AllTasksPage from './pages/AllTasksPage'
-import CompletedPage from './pages/CompletedPage'
-import Header from './components/layout/Header'
-import ProjectPage from './pages/ProjectPage'
-import Sidebar from './components/layout/Sidebar'
-import StateDebugger from './components/debug/StateDebugger'
-import TagPage from './pages/TagPage'
-import TaskFormModal from './components/tasks/TaskFormModal'
-import { useState } from 'react'
+  const getData = async() => {
+    try{
+      const response = await axios.get<User[]>('https://645403e2c18adbbdfeada66e.mockapi.io/users')
+      setUsers(response.data)
+      setLoading(false)
+    }catch(error: unknown){
+      console.log(error)
+      setError(error instanceof Error ? error.message : 'An unknown error occurred')
+      setLoading(false)
+    }
+  }
 
-function App() {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [projects, setProjects] = useState<Project[]>([])
-  const [tags, setTags] = useState<Tag[]>([])
-  const [filters, setFilters] = useState({ projectId: null, tagId: null, completedOnly: false })
-
+  useEffect(() => {
+    getData()
+}, [])
 
   return (
-    <BrowserRouter>
-      <Header />
-      <Sidebar
-        projects={projects}
-        tags={tags}
-        filters={filters}
-        setFilters={setFilters} />
-      <Routes>
-        <Route path="/" element={<AllTasksPage tasks={tasks} filters={filters} />} />
-        <Route path="/projects/:id" element={<ProjectPage tasks={tasks} />} />
-        <Route path="/tags/:id" element={<TagPage tasks={tasks} />} />
-        <Route path="/completed" element={<CompletedPage tasks={tasks} />} />
-      </Routes>
-      <TaskFormModal onAddTask={(newTask) => {
-        setTasks([...tasks, newTask])
-      }
-      } projects={projects}
-        tags={tags} />
-      <StateDebugger state={{ tasks, projects, tags, filters }} />
-    </BrowserRouter>
+    <div style={{ display: 'flex', gap: '2rem', padding: '1rem' }}>
+      <div style={{ flex: 1 }}>
+        <h1>User List</h1>
+        {loading && <p>Loading...</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {!loading && !error && <UserList users={users} onSelect={setSelectedUser} />}
+      </div>
+      <div style={{ flex: 1 }}>
+        <h1>User Details</h1>
+        <UserDetails user={selectedUser} />
+      </div>
+    </div>
   )
 }
-
-export default App
