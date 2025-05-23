@@ -9,9 +9,9 @@ export function UserDetails({ user }: Props) {
 
   return (
     <div style={{ border: '1px solid #ccc', padding: '1rem' }}>
-      <h2>{user.name}</h2>
-      <img src={user.avatar} alt={user.name} width={64} height={64} style={{ borderRadius: '50%' }} />
-      <p>Email: {user.email}</p>
+      <h2>{user.firstName} {user.lastName}</h2>
+      <img src={user.img} alt={user.firstName} width={64} height={64} style={{ borderRadius: '50%' }} />
+      <p>{user.bio}</p>
     </div>
   )
 }

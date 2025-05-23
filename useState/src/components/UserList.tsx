@@ -10,8 +10,8 @@ export function UserList({ users, onSelect }: Props) {
     <ul>
       {users.map(user => (
         <li key={user.id} onClick={() => onSelect(user)} style={{ cursor: 'pointer', marginBottom: '0.5rem' }}>
-          <img src={user.avatar} alt={user.name} width={32} height={32} style={{ borderRadius: '50%', marginRight: 8 }} />
-          {user.name}
+          <img src={user.img} alt={user.firstName} width={32} height={32} style={{ borderRadius: '50%', marginRight: 8 }} />
+          {user.firstName} {user.lastName}
         </li>
       ))}
     </ul>
