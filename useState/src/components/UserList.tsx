@@ -5,7 +5,7 @@ type Props = {
   onSelect: (user: User) => void
 }
 
-export function UserList({ users, onSelect }: Props) {
+const UserList = ({ users, onSelect }: Props) => {
   return (
     <ul>
       {users.map(user => (
@@ -17,3 +17,6 @@ export function UserList({ users, onSelect }: Props) {
     </ul>
   )
 }
+
+export default UserList
+    

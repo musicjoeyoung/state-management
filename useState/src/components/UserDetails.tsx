@@ -4,7 +4,7 @@ type Props = {
   user: User | null
 }
 
-export function UserDetails({ user }: Props) {
+const UserDetails = ({ user }: Props) => {
   if (!user) return <p>Select a user to see details.</p>
 
   return (
@@ -15,3 +15,5 @@ export function UserDetails({ user }: Props) {
     </div>
   )
 }
+
+export default UserDetails
