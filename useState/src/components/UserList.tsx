@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-
-
 const UserList = () => {
     const [users, setUsers] = useState<User[]>([])
     const [loading, setLoading] = useState(true)
@@ -25,6 +23,15 @@ const UserList = () => {
     useEffect(() => {
       getData()
   }, [])
+  
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>
+  }
+
   return (
     <ul>
       {users.map(user => (

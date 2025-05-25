@@ -1,8 +1,8 @@
 export type User = {
-    id: string
-    firstName: string
-    lastName: string
-    img: string
-    bio: string
-  }
-  
+  id: string
+  firstName: string
+  lastName: string
+  age: number
+  img: string
+  bio: string
+}

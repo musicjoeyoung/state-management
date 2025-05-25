@@ -1,7 +1,31 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
+nav {
+  height: 4rem;
+  background-color: lightyellow;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+form {
+  display: flex;
+  gap: 1rem;
+  width: 50%;
+  margin: 2rem auto;
+}
+
+.edit-create-form {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  padding: 2rem;
+}
+
+.error {
+  color: red;
+}
