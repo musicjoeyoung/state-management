@@ -39,7 +39,7 @@ const UserStats = () => {
           return sum;
         }
         return sum + age;
-      }, 0) / totalUsers
+      }, 0) / totalUsers;
       const oldestUser = users.reduce((oldest, user) =>
         user.age > (oldest?.age || 0) ? user : oldest, null as User | null
       )
