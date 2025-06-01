@@ -1,35 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import UserList from './components/UserList'
+import UserDetails from './components/UserDetails'
+import UserForm from './components/UserForm'
+import UserStats from './components/UserStats'
+import UserSearch from './components/UserSearch'
+import SearchResults from './components/SearchResults'
+import Navbar from './components/Navbar'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <BrowserRouter>
+      <Navbar />
+      <UserStats />
+      <UserSearch />
+      <Routes>
+        <Route path="/" element={<UserList />} />
+        <Route path="/users/:id" element={<UserDetails />} />
+        <Route path="/create" element={<UserForm />} />
+        <Route path="/edit/:id" element={<UserForm />} />
+        <Route path="/search" element={<SearchResults />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
-
 export default App
