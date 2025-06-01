@@ -17,16 +17,33 @@ const UserStats = () => {
       const response = await axios.get<User[]>('https://645403e2c18adbbdfeada66e.mockapi.io/users')
       const users = response.data
 
+      //console.log('API Response:', users)
+
       if (!Array.isArray(users)) {
         throw new Error('Invalid response format')
       }
 
       const totalUsers = users.length
-      const averageAge = users.reduce((sum, user) => sum + user.age, 0) / totalUsers
-      const oldestUser = users.reduce((oldest, user) => 
+
+      /*       const ages = users.map(user => ({
+              id: user.id,
+              age: user.age,
+              ageType: typeof user.age
+            })) */
+      //console.log('User Ages:', ages)
+
+      const averageAge = users.reduce((sum, user) => {
+        const age = Number(user.age);
+        if (isNaN(age)) {
+          console.warn(`Invalid age for user ${user.id}:`, user.age);
+          return sum;
+        }
+        return sum + age;
+      }, 0) / totalUsers
+      const oldestUser = users.reduce((oldest, user) =>
         user.age > (oldest?.age || 0) ? user : oldest, null as User | null
       )
-      const youngestUser = users.reduce((youngest, user) => 
+      const youngestUser = users.reduce((youngest, user) =>
         user.age < (youngest?.age || Infinity) ? user : youngest, null as User | null
       )
 
