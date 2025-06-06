@@ -1,36 +1,11 @@
 import type { User } from '../types/User'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
 
-const UserList = () => {
-    const [users, setUsers] = useState<User[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
-  
-    const getData = async() => {
-      try{
-        const response = await axios.get<User[]>('https://645403e2c18adbbdfeada66e.mockapi.io/users')
-        setUsers(response.data)
-        setLoading(false)
-      }catch(error: unknown){
-        console.log(error)
-        setError(error instanceof Error ? error.message : 'An unknown error occurred')
-        setLoading(false)
-      }
-    }
-  
-    useEffect(() => {
-      getData()
-  }, [])
-  
-  if (loading) {
-    return <div>Loading...</div>
-  }
+interface UserListProps {
+  users: User[]
+}
 
-  if (error) {
-    return <div>Error: {error}</div>
-  }
+const UserList = ({ users }: UserListProps) => {
 
   return (
     <ul>

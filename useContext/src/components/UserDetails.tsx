@@ -1,28 +1,17 @@
 import type { User } from '../types/User'
 import { useParams, Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
 
-const UserDetails = () => {
-    const [user, setUser] = useState<User | null>(null)
-    const { id } = useParams()
+interface UserDetailsProps {
+  users: User[]
+}
 
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const response = await axios.get<User>(`https://645403e2c18adbbdfeada66e.mockapi.io/users/${id}`)
-                const data = response.data
-                setUser(data)
-            } catch (error) {
-            console.error(error)
-            }
-        }
-        getUser()
-    }, [])
+const UserDetails = ({ users }: UserDetailsProps) => {
+  const { id } = useParams()
+  const user = users.find(user => user.id === id)
 
-    if (!user) {
-        return <div>Loading...</div>
-    }
+  if (!user) {
+    return <div>User not found</div>
+  }
 
   return (
     <div>

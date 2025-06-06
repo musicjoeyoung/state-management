@@ -3,7 +3,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 
-const UserForm = () => {
+interface UserFormProps {
+  onUserAdded: () => Promise<void>
+}
+
+const UserForm = ({ onUserAdded }: UserFormProps) => {
   const navigate = useNavigate()
   const { id } = useParams()
   const [formData, setFormData] = useState<User>({
@@ -45,7 +49,7 @@ const UserForm = () => {
 
       const method = id ? 'PUT' : 'POST'
       
-      const response = await axios({
+      await axios({
         method,
         url,
         headers: {
@@ -53,8 +57,7 @@ const UserForm = () => {
         },
         data: formData,
       })
-      console.log(response)
-
+      await onUserAdded()
       navigate('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
