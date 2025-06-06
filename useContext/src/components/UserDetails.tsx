@@ -1,16 +1,21 @@
-import type { User } from '../types/User'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom';
+import { useUsers } from '../context/UserContext';
 
-interface UserDetailsProps {
-  users: User[]
-}
+const UserDetails = () => {
+  const { id } = useParams();
+  const { users, loading, error } = useUsers();
+  const user = users.find(user => user.id === id);
 
-const UserDetails = ({ users }: UserDetailsProps) => {
-  const { id } = useParams()
-  const user = users.find(user => user.id === id)
+  if (loading) {
+    return <div>Loading user details...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   if (!user) {
-    return <div>User not found</div>
+    return <div>User not found</div>;
   }
 
   return (

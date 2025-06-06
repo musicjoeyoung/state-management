@@ -1,53 +1,56 @@
-import type { User } from '../types/User'
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
+import type { User } from '../types/User';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useUsers } from '../context/UserContext';
+import axios from 'axios';
 
-interface UserFormProps {
-  onUserAdded: () => Promise<void>
-}
-
-const UserForm = ({ onUserAdded }: UserFormProps) => {
-  const navigate = useNavigate()
-  const { id } = useParams()
-  const [formData, setFormData] = useState<User>({
-    id: '',
+const UserForm = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { fetchUsers } = useUsers();
+  
+  const [formData, setFormData] = useState<Omit<User, 'id'> & { id?: string }>({
     firstName: '',
     lastName: '',
     age: 0,
     bio: '',
     img: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  });
+  
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const fetchUser = async () => {
+    if (!id) return;
+    
     try {
-      const response = await axios.get<User>(`https://645403e2c18adbbdfeada66e.mockapi.io/users/${id}`)
-      const data = response.data
-      setFormData(data)
+      setLoading(true);
+      const response = await axios.get<User>(`https://645403e2c18adbbdfeada66e.mockapi.io/users/${id}`);
+      setFormData(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch user')
+      setError(err instanceof Error ? err.message : 'Failed to fetch user');
+    } finally {
+      setLoading(false);
     }
-  }
+  };
   
   useEffect(() => {
     if (id) {
-      fetchUser()
+      fetchUser();
     }
-  }, [id])
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
       const url = id 
         ? `https://645403e2c18adbbdfeada66e.mockapi.io/users/${id}`
-        : 'https://645403e2c18adbbdfeada66e.mockapi.io/users'
+        : 'https://645403e2c18adbbdfeada66e.mockapi.io/users';
 
-      const method = id ? 'PUT' : 'POST'
+      const method = id ? 'PUT' : 'POST';
       
       await axios({
         method,
@@ -56,15 +59,16 @@ const UserForm = ({ onUserAdded }: UserFormProps) => {
           'Content-Type': 'application/json',
         },
         data: formData,
-      })
-      await onUserAdded()
-      navigate('/')
+      });
+      
+      await fetchUsers();
+      navigate('/');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target

@@ -1,18 +1,29 @@
-import type { User } from '../types/User'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { useUsers } from '../context/UserContext';
 
-interface UserListProps {
-  users: User[]
-}
+const UserList = () => {
+  const { users, loading, error } = useUsers()
 
-const UserList = ({ users }: UserListProps) => {
+  if (loading) {
+    return <div>Loading users...</div>
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>
+  }
 
   return (
     <ul>
       {users.map(user => (
         <Link to={`/users/${user.id}`} key={user.id}>
           <li>
-            <img src={user.img} alt={user.firstName} width={32} height={32} style={{ borderRadius: '50%', marginRight: 8 }} />
+            <img 
+              src={user.img} 
+              alt={user.firstName} 
+              width={32} 
+              height={32} 
+              style={{ borderRadius: '50%', marginRight: 8 }} 
+            />
             {user.firstName} {user.lastName}
           </li>
         </Link>

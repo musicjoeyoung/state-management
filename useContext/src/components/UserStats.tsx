@@ -1,15 +1,23 @@
-import type { User } from '../types/User'
+import { useUsers } from '../context/UserContext';
+import type { User } from '../types/User';
 
-interface UserStatsProps {
-  users: User[]
-}
+const UserStats = () => {
+  const { users, loading, error } = useUsers();
 
-const UserStats = ({ users }: UserStatsProps) => {
-  if (users.length === 0) {
-    return <div>No users available</div>
+  if (loading) {
+    return <div>Loading stats...</div>;
   }
 
-  const totalUsers = users.length
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
+  if (users.length === 0) {
+    return <div>No users available</div>;
+  }
+
+  const totalUsers = users.length;
+  
   const averageAge = users.reduce((sum, user) => {
     const age = Number(user.age);
     if (isNaN(age)) {
@@ -21,11 +29,11 @@ const UserStats = ({ users }: UserStatsProps) => {
   
   const oldestUser = users.reduce((oldest, user) =>
     user.age > (oldest?.age || 0) ? user : oldest, null as User | null
-  )
+  );
   
   const youngestUser = users.reduce((youngest, user) =>
     user.age < (youngest?.age || Infinity) ? user : youngest, null as User | null
-  )
+  );
 
   return (
     <div>
@@ -51,7 +59,7 @@ const UserStats = ({ users }: UserStatsProps) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserStats
+export default UserStats;

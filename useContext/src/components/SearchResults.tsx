@@ -1,16 +1,21 @@
-import { useSearchParams } from 'react-router-dom'
-import type { User } from '../types/User'
+import { useSearchParams } from 'react-router-dom';
+import { useUsers } from '../context/UserContext';
 
-interface SearchResultsProps {
-  users: User[]
-}
+const SearchResults = () => {
+  const [searchParams] = useSearchParams();
+  const { users, loading, error } = useUsers();
 
-const SearchResults = ({ users }: SearchResultsProps) => {
-  const [searchParams] = useSearchParams()
+  const name = searchParams.get('name') || '';
+  const minAge = parseInt(searchParams.get('minAge') || '0');
+  const maxAge = parseInt(searchParams.get('maxAge') || '100');
 
-  const name = searchParams.get('name') || ''
-  const minAge = parseInt(searchParams.get('minAge') || '0')
-  const maxAge = parseInt(searchParams.get('maxAge') || '100')
+  if (loading) {
+    return <div>Loading search results...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   const results = users.filter(user => {
     const matchesName = user.firstName.toLowerCase().includes(name.toLowerCase()) || 
