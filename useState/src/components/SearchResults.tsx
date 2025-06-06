@@ -1,31 +1,12 @@
-import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { User } from '../types/User'
 
-const SearchResults = () => {
+interface SearchResultsProps {
+  users: User[]
+}
+
+const SearchResults = ({ users }: SearchResultsProps) => {
   const [searchParams] = useSearchParams()
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        const response = await fetch('https://645403e2c18adbbdfeada66e.mockapi.io/users')
-        if (!response.ok) throw new Error('Failed to fetch users')
-        const data = await response.json()
-        setUsers(data)
-      } catch (err) {
-        setError('Failed to load users')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchUsers()
-  }, [])
 
   const name = searchParams.get('name') || ''
   const minAge = parseInt(searchParams.get('minAge') || '0')
@@ -38,8 +19,6 @@ const SearchResults = () => {
     return matchesName && matchesAge
   })
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div className="error">{error}</div>
   if (results.length === 0) return <div>No results found</div>
 
   return (
